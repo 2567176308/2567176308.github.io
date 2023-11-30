@@ -148,6 +148,122 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://q7df1.github.io/2023/11/30/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B-lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/android-chrome-192x192.png">
+      <meta itemprop="name" content="SH EN">
+      <meta itemprop="description" content="纪录学习分享生活">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Shen的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/11/30/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B-lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F/" class="post-title-link" itemprop="url">Java函数式编程- lambda表达式</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-11-30 17:37:35" itemprop="dateCreated datePublished" datetime="2023-11-30T17:37:35+08:00">2023-11-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-12-01 01:11:09" itemprop="dateModified" datetime="2023-12-01T01:11:09+08:00">2023-12-01</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="lambda表达式"><a href="#lambda表达式" class="headerlink" title="lambda表达式"></a>lambda表达式</h1><p>对于面向对象对象语言中 lambda表达式其实是不重要的</p>
+<p>如果你有了解过JavaScript、你一定对函数式编程比较熟悉(Js太恶心啦！！！ 用的时候看不了规则根本不知道怎么写)</p>
+<p>多说无益、先看效果：首先我们先假设有这么一个场景要实现一个数组排序 给定一个数组、将数组按指定要求(正序&#x2F;倒序)排序</p>
+<p>在<code>Java</code>中我们可以直接使用<code>Arrays.sort()</code>调用JDK中 的方法进行排序(但该方法只提供了正序排序的实现)</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Sort</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">int</span>[] nums = <span class="keyword">new</span> <span class="title class_">int</span>[]&#123;<span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="number">25</span>,<span class="number">7</span>,<span class="number">23</span>,<span class="number">7</span>,<span class="number">34</span>,<span class="number">8</span>,<span class="number">12</span>,<span class="number">5</span>,<span class="number">3</span>,<span class="number">71</span>,<span class="number">236</span>,<span class="number">12</span>&#125;;</span><br><span class="line">        Arrays.sort(nums);</span><br><span class="line">        System.out.println(Arrays.toString(nums));</span><br><span class="line">        <span class="comment">// outputL: [1, 3, 3, 5, 5, 7, 7, 8, 12, 12, 23, 25, 34, 71, 236]</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当然sort()方法也可以实现倒序排序、只不过有点不一样</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Sort</span> &#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        Integer[] nums = <span class="keyword">new</span> <span class="title class_">Integer</span>[]&#123;<span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="number">25</span>,<span class="number">7</span>,<span class="number">23</span>,<span class="number">7</span>,<span class="number">34</span>,<span class="number">8</span>,<span class="number">12</span>,<span class="number">5</span>,<span class="number">3</span>,<span class="number">71</span>,<span class="number">236</span>,<span class="number">12</span>&#125;; <span class="comment">// 是包装类 Integer 不是int</span></span><br><span class="line">        Arrays.sort(nums, Collections.reverseOrder());</span><br><span class="line">        System.out.println(Arrays.toString(nums));</span><br><span class="line">        <span class="comment">// output: [236, 71, 34, 25, 23, 12, 12, 8, 7, 7, 5, 5, 3, 3, 1]</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>ok , 通过这两个简单方法就可以实现我们的功能、但这并不是本问介绍的重点、重点是我们要通过这个案例来学习了解到lambda表达式、并且间接的感受Java函数式编程思想</p>
+<p>接下来我们就来实现一个简易版本的<code>Arrays.sort(T[]nums,Comparable)</code><br>首先确定想要的效果、T[]nums 确定一个任何对象类型的数组、传入一个比较器接口类、该接口仅仅做一件事情就是帮我比较两个数大小，叫做比较器，<strong>当我们的排序数据换成其他对象时候、原始的<code>+</code>与<code>-</code>已经不能满足我们的需求了、比如比较String 大小 在String中存在CompareTo方法比较两个字符串大小，因此为满足其他复杂数据类型也能够排序、引入比较器来自定义比较两个数据大小尤为重要</strong><br>先定义比较器、为了不予Jdk本身接口<strong>(Comparator)</strong>冲突我取名叫<code>ShenComparator.java</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@FunctionalInterface</span> <span class="comment">// 做个约束 改接口只能定义一个属于自己的抽象方法</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">ShenComparator</span>&lt;T&gt; &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 比较两个数的大小</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> o1 第一个数</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> o2 第二个数</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> &gt; 0 ? 前面的数字大 ： 后面的数字大</span></span><br><span class="line"><span class="comment">     * NOTICE:: 这里不仅仅表示值 比如integer double 等数值 、</span></span><br><span class="line"><span class="comment">     * 可以表示一切对象按照指定规则比较大小</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> <span class="title function_">compare</span><span class="params">(T o1,T o2)</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 该方法属于Object(出现在这里属于多余)</span></span><br><span class="line">    <span class="type">boolean</span> <span class="title function_">equals</span><span class="params">(Object obj)</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里的比较器唯一的规则就是 比较大小结果是大于0还是小于0，举个例子 假设我们需要比较两个Integer类型数字、可以直接将前面数字减去后面的数字相减</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 实现类</span></span><br><span class="line"><span class="comment">// 如果 o1 &gt; o2 结果自然大于零， o1 &lt; o2 结果自然小于零, 如果将结果反序则得到的排序结果也是相反逻辑</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">compare</span><span class="params">(Integer o1,Integer o2)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> o1 - o2;</span><br><span class="line">    <span class="comment">// return o2 - o1;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>ok、有了比较器也还先别着急、 先用最简易版本的数字排序来熟悉一下排序的过程、这里为了简单我直接用快速排序算法来实现</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Utils</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 排序</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> nums 待排序的数组</span></span><br><span class="line"><span class="comment">     *                   而是一个具体的排序规则 ::</span></span><br><span class="line"><span class="comment">     *                   字符串有字符串的规则</span></span><br><span class="line"><span class="comment">     *                   数字类型有数字类型比较规则</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span>  <span class="keyword">void</span>  <span class="title function_">sort</span><span class="params">(<span class="type">int</span>[] nums)</span> &#123;</span><br><span class="line">        quickSort(nums,<span class="number">0</span>,nums.length - <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span>  <span class="keyword">void</span> <span class="title function_">quickSort</span><span class="params">(<span class="type">int</span>[] nums,<span class="type">int</span> left,<span class="type">int</span> right)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (left &gt;= right)</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        <span class="type">int</span> <span class="variable">pivot</span> <span class="operator">=</span> partition(nums, left, right);</span><br><span class="line">        quickSort(nums, left, pivot - <span class="number">1</span>);</span><br><span class="line">        quickSort(nums, pivot + <span class="number">1</span>, right);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span>  <span class="keyword">void</span> <span class="title function_">swap</span><span class="params">(<span class="type">int</span>[] nums,<span class="type">int</span> x, <span class="type">int</span> y)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">mid</span> <span class="operator">=</span> nums[x];</span><br><span class="line">        nums[x] = nums[y];</span><br><span class="line">        nums[y] = mid;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* 哨兵划分 */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span>  <span class="type">int</span> <span class="title function_">partition</span><span class="params">(<span class="type">int</span>[] nums, <span class="type">int</span> left, <span class="type">int</span> right)</span> &#123;</span><br><span class="line">        <span class="comment">// 以 nums[left] 作为基准数</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> left, j = right;</span><br><span class="line">        <span class="keyword">while</span> (i &lt; j) &#123;</span><br><span class="line">            <span class="keyword">while</span> (i &lt; j &amp;&amp; nums[j] &gt;= nums[left])</span><br><span class="line">                j--;</span><br><span class="line">            <span class="keyword">while</span> (i &lt; j &amp;&amp; nums[i] &lt;= nums[left])</span><br><span class="line">                i++;</span><br><span class="line">            swap(nums, i, j);</span><br><span class="line">        &#125;</span><br><span class="line">        swap(nums, i, left);</span><br><span class="line">        <span class="keyword">return</span> i;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在已经实现了基本的排序功能、但是只针对于int[]数组、而且不支持随意切换正序还是倒序，现在测试一下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Main</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span>[] nums = &#123;<span class="number">43</span>,<span class="number">1</span>,<span class="number">56</span>,<span class="number">7</span>,<span class="number">23</span>,<span class="number">12</span>,<span class="number">46</span>,<span class="number">23</span>,<span class="number">8</span>,<span class="number">9</span>,<span class="number">4</span>,<span class="number">23</span>,<span class="number">56</span>,<span class="number">30</span>,<span class="number">23</span>,<span class="number">5</span>&#125;;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        Utils.sort(nums);</span><br><span class="line">        System.out.println(Arrays.toString(nums));</span><br><span class="line">        <span class="comment">// output: [1, 4, 5, 7, 8, 9, 12, 23, 23, 23, 23, 30, 43, 46, 56, 56]</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可见基本上排序功能是已经实现了、但是还缺少本文想要描述的重点、假设现在不是一堆数字要排序、而是一堆’学生’对象想通过成绩、年龄或通过名称排序，那该怎么办，接下来就需要引入我们自定义的<code>比较器接口</code> 以及给我们的int[] 都替换成 T[] 来实现， 另外我们算法中对排序数比较大小的<code>-</code> 和<code>+</code>号都可以用comparator.compare（）方法来代替  </p>
+<p>加上比较器和泛型后</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Utils</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 排序</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> nums 待排序的数组</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> comparator 排序规则比较器 传入不是具体的某一个数据</span></span><br><span class="line"><span class="comment">     *                   而是一个具体的排序规则 ::</span></span><br><span class="line"><span class="comment">     *                   字符串有字符串的规则</span></span><br><span class="line"><span class="comment">     *                   数字类型有数字类型比较规则</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="keyword">void</span>  <span class="title function_">sort</span><span class="params">(T[] nums, ShenComparator&lt;T&gt; comparator)</span> &#123;</span><br><span class="line">        quickSort(nums,<span class="number">0</span>,nums.length - <span class="number">1</span>,comparator);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> &lt;T&gt; <span class="keyword">void</span> <span class="title function_">quickSort</span><span class="params">(T[] nums,<span class="type">int</span> left,<span class="type">int</span> right,ShenComparator&lt;T&gt; comparator)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (left &gt;= right)</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        <span class="type">int</span> <span class="variable">pivot</span> <span class="operator">=</span> partition(nums, left, right,comparator);</span><br><span class="line">        quickSort(nums, left, pivot - <span class="number">1</span>,comparator);</span><br><span class="line">        quickSort(nums, pivot + <span class="number">1</span>, right,comparator);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> &lt;T&gt; <span class="keyword">void</span> <span class="title function_">swap</span><span class="params">(T[] nums,<span class="type">int</span> x, <span class="type">int</span> y)</span> &#123;</span><br><span class="line">        <span class="type">T</span> <span class="variable">mid</span> <span class="operator">=</span> nums[x];</span><br><span class="line">        nums[x] = nums[y];</span><br><span class="line">        nums[y] = mid;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* 哨兵划分 */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> &lt;T&gt; <span class="type">int</span> <span class="title function_">partition</span><span class="params">(T[] nums, <span class="type">int</span> left, <span class="type">int</span> right,ShenComparator&lt;T&gt; comparator)</span> &#123;</span><br><span class="line">        <span class="comment">// 以 nums[left] 作为基准数</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> left, j = right;</span><br><span class="line">        <span class="keyword">while</span> (i &lt; j) &#123;</span><br><span class="line">            <span class="comment">// 替换 nums[j] &gt;= nums[left]</span></span><br><span class="line">            <span class="keyword">while</span> (i &lt; j &amp;&amp; comparator.compare(nums[j],nums[left]) &gt;= <span class="number">0</span>)</span><br><span class="line">                j--;</span><br><span class="line">                <span class="comment">// 替换nums[i] &lt;= nums[left]</span></span><br><span class="line">            <span class="keyword">while</span> (i &lt; j &amp;&amp; comparator.compare(nums[i],nums[left]) &lt;= <span class="number">0</span>)</span><br><span class="line">                i++;</span><br><span class="line">            swap(nums, i, j);</span><br><span class="line">        &#125;</span><br><span class="line">        swap(nums, i, left);</span><br><span class="line">        <span class="keyword">return</span> i;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>直接测试！</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Main</span> &#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line"></span><br><span class="line">        Student[] students = <span class="keyword">new</span> <span class="title class_">Student</span>[]&#123;</span><br><span class="line">                <span class="keyword">new</span> <span class="title class_">Student</span>(<span class="number">18</span>,<span class="string">&quot;lip&quot;</span>,<span class="number">99F</span>),</span><br><span class="line">                <span class="keyword">new</span> <span class="title class_">Student</span>(<span class="number">19</span>,<span class="string">&quot;dabbe&quot;</span>,<span class="number">45.5F</span>),</span><br><span class="line">                <span class="keyword">new</span> <span class="title class_">Student</span>(<span class="number">20</span>,<span class="string">&quot;miky&quot;</span>,<span class="number">50.5F</span>)&#125;;</span><br><span class="line"></span><br><span class="line">        Utils.sort(students, <span class="keyword">new</span> <span class="title class_">ShenComparator</span>&lt;Student&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">compare</span><span class="params">(Student o1, Student o2)</span> &#123;</span><br><span class="line">                <span class="comment">// 按照成绩从大到小排序</span></span><br><span class="line">                <span class="keyword">return</span>  (<span class="type">int</span>)(o2.getScore() -  o1.getScore());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        System.out.println(Arrays.toString(students));</span><br><span class="line">        <span class="comment">//output:[Student(age=18, name=lip, score=99.0), Student(age=20, name=miky, score=50.5), Student(age=19, name=dabbe, score=45.5)]</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>ok 这里可以看到、我们调用Utils.sort方法时new 了一个匿名类部类 并重写里面的 compare方法来实现传递比较器，这就是自定义排序规则的根本原因。</p>
+<p>但是到现在我们还根本没有跟<code>lambda</code>表达式沾边、是的、java8 以后匿名类部类可以改写简化成lambda表达式、但是有前提：</p>
+<ul>
+    <li>该接口中(ShenComparator)只能有一个抽象方法</li>
+    <li>也许还有。。。不记得了</li>
+</ul>
+
+<p>用lambda表达式改写：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Main</span> &#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line"></span><br><span class="line">        Student[] students = <span class="keyword">new</span> <span class="title class_">Student</span>[]&#123;</span><br><span class="line">                <span class="keyword">new</span> <span class="title class_">Student</span>(<span class="number">18</span>,<span class="string">&quot;lip&quot;</span>,<span class="number">99F</span>),</span><br><span class="line">                <span class="keyword">new</span> <span class="title class_">Student</span>(<span class="number">19</span>,<span class="string">&quot;dabbe&quot;</span>,<span class="number">45.5F</span>),</span><br><span class="line">                <span class="keyword">new</span> <span class="title class_">Student</span>(<span class="number">20</span>,<span class="string">&quot;miky&quot;</span>,<span class="number">50.5F</span>)&#125;;</span><br><span class="line"></span><br><span class="line">        Utils.sort(students, (o1, o2) -&gt; (<span class="type">int</span>)(o2.getScore() -  o1.getScore())); <span class="comment">// 只需要一行代码及可完成</span></span><br><span class="line">        System.out.println(Arrays.toString(students));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Utils.sort(students,(a,b) -&gt; b.getName().compareTo(a.getName())); <span class="comment">// 根据名字倒序排序</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Utils.sort(students,(a,b) -&gt; a.getAge() - b.getAge()); <span class="comment">// 根据年龄正序排序</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="备注"><a href="#备注" class="headerlink" title="备注"></a>备注</h2><p>为了更容易理解、贴出类项目结构(额、好像没必要，算了贴都贴了反正就两个重要类ShenComparator 与 Utils)</p>
+<p><img src="/../image/menuLambda.png"></p>
+<p><strong>建议查看java函数式编程的源码内容本文只是仿照他写的一个简易实现</strong></p>
+<h2 id="我是怎么使用Lambda表达式的？"><a href="#我是怎么使用Lambda表达式的？" class="headerlink" title="我是怎么使用Lambda表达式的？"></a>我是怎么使用Lambda表达式的？</h2><p>首先Lambda表达式主要用于集合的操作中</p>
+<p>其中java <code>Stream</code>流配合Lambda表达式对集合操作就非常便捷</p>
+<p>比如：假设有一个包含员工信息的列表，我们希望按照部门对员工进行分组，并计算每个部门的平均工资。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Main</span> &#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Data</span> <span class="comment">// 为了节省空间就不写setter getter构造方法了 直接用lombok 自动生成了</span></span><br><span class="line">    <span class="meta">@AllArgsConstructor</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Employee</span> &#123;</span><br><span class="line">        <span class="keyword">private</span> String name;</span><br><span class="line">        <span class="keyword">private</span> String department;</span><br><span class="line">        <span class="keyword">private</span> <span class="type">double</span> salary;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line"></span><br><span class="line">        List&lt;Employee&gt; list = Arrays.asList(<span class="keyword">new</span> <span class="title class_">Employee</span>(<span class="string">&quot;Alice&quot;</span>, <span class="string">&quot;HR&quot;</span>, <span class="number">50000</span>),</span><br><span class="line">                <span class="keyword">new</span> <span class="title class_">Employee</span>(<span class="string">&quot;Bob&quot;</span>, <span class="string">&quot;Engineering&quot;</span>, <span class="number">60000</span>),</span><br><span class="line">                <span class="keyword">new</span> <span class="title class_">Employee</span>(<span class="string">&quot;Charlie&quot;</span>, <span class="string">&quot;HR&quot;</span>, <span class="number">55000</span>),</span><br><span class="line">                <span class="keyword">new</span> <span class="title class_">Employee</span>(<span class="string">&quot;David&quot;</span>, <span class="string">&quot;Engineering&quot;</span>, <span class="number">70000</span>),</span><br><span class="line">                <span class="keyword">new</span> <span class="title class_">Employee</span>(<span class="string">&quot;Eva&quot;</span>, <span class="string">&quot;HR&quot;</span>, <span class="number">48000</span>),</span><br><span class="line">                <span class="keyword">new</span> <span class="title class_">Employee</span>(<span class="string">&quot;Frank&quot;</span>, <span class="string">&quot;Sales&quot;</span>, <span class="number">75000</span>));</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        Map&lt;String, Double&gt; averageSalaryByDepartment  = list.stream()</span><br><span class="line">                .collect(Collectors.groupingBy(Employee::getDepartment, <span class="comment">// 按部门分组</span></span><br><span class="line">                        Collectors.averagingDouble(Employee::getSalary))); <span class="comment">// 求平均值</span></span><br><span class="line"></span><br><span class="line">        averageSalaryByDepartment.forEach((department, salaryAVG) -&gt; System.out.println(<span class="string">&quot;Department: &quot;</span> + department + <span class="string">&quot;, Average Salary: &quot;</span> + salaryAVG));</span><br><span class="line">        <span class="comment">//output:Department: Engineering, Average Salary: 65000.0</span></span><br><span class="line">				<span class="comment">//Department: Sales, Average Salary: 75000.0</span></span><br><span class="line">				<span class="comment">//Department: HR, Average Salary: 51000.0</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>另外使用lambda表达式除了要会查文档外更建议用Idea查看具体需要类型，如 我这里使用filter方法实现过滤功能、但看不明白需要传递参数是什么、可以通过idea查看、需要一个Predicate （断言）接口 、里面一个test方法 返回值为boolean类型 需要一个参数、知道这些信息就可以很轻松写出lambda表达式，不需要new 个匿名类部类再改写。</p>
+<p><img src="/../image/filterL.png"></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://q7df1.github.io/2023/07/21/jdk%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -977,158 +1093,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://q7df1.github.io/2023/01/15/%E6%90%AD%E5%BB%BAcs%E8%B5%B7%E6%BA%90%E6%9C%8D%E5%8A%A1%E5%99%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/android-chrome-192x192.png">
-      <meta itemprop="name" content="SH EN">
-      <meta itemprop="description" content="纪录学习分享生活">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Shen的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/01/15/%E6%90%AD%E5%BB%BAcs%E8%B5%B7%E6%BA%90%E6%9C%8D%E5%8A%A1%E5%99%A8/" class="post-title-link" itemprop="url">搭建cs起源服务器</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2023-01-15 00:13:59" itemprop="dateCreated datePublished" datetime="2023-01-15T00:13:59+08:00">2023-01-15</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-07-09 22:22:16" itemprop="dateModified" datetime="2023-07-09T22:22:16+08:00">2023-07-09</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>欢迎来学习搭建cs起源，搭建cs服务器主要分为三部分：</p>
-<p>1、服务器选择</p>
-<p>2、steamcmd安装</p>
-<p>3、登录并安装CS起源服务器</p>
-<p>注意：在这里，我默认了你有Linux基础，能够看懂并处理一些问题</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="一、选择一款合适的轻量级服务器。"><a href="#一、选择一款合适的轻量级服务器。" class="headerlink" title="一、选择一款合适的轻量级服务器。"></a>一、选择一款合适的轻量级服务器。</h3><p>我选择的是国内轻量级云服务器，各大商家其实卖的都不贵，大家可以去多对比，选择折扣力度最大的，也可以先找个免费的试试水。一定要选择国内的服务器，毕竟作为游戏服务器延迟太高懂得都懂，除非你在国外，那选择你自己所在区域就好了。</p>
-<h4 id="操作系统选择：Centos或Ubuntu或Debian"><a href="#操作系统选择：Centos或Ubuntu或Debian" class="headerlink" title="操作系统选择：Centos或Ubuntu或Debian"></a>操作系统选择：Centos或Ubuntu或Debian</h4><p>这些都可以，区别有一点点但是不大这里我选择的是CentOS7.6然后Ubuntu和Debian因为同根所以方法也是相同的</p>
-<p>当然也可以用docker安装，而且更加方便有兴趣的小伙伴，我会将官网地址贴在最后面</p>
-<h4 id="登录方式：我选择的xshell这款工具，其他工具一样"><a href="#登录方式：我选择的xshell这款工具，其他工具一样" class="headerlink" title="登录方式：我选择的xshell这款工具，其他工具一样"></a>登录方式：我选择的xshell这款工具，其他工具一样</h4><h4 id="开放端口：一定要在服务器厂商那-控制台-防火墙-添加规则，开放端口，默认27015（TCP和UDP都开放）"><a href="#开放端口：一定要在服务器厂商那-控制台-防火墙-添加规则，开放端口，默认27015（TCP和UDP都开放）" class="headerlink" title="开放端口：一定要在服务器厂商那-&gt;控制台-&gt;防火墙-&gt;添加规则，开放端口，默认27015（TCP和UDP都开放）"></a>开放端口：一定要在服务器厂商那-&gt;控制台-&gt;防火墙-&gt;添加规则，开放端口，默认27015（TCP和UDP都开放）</h4><h3 id="二、steamcmd安装"><a href="#二、steamcmd安装" class="headerlink" title="二、steamcmd安装"></a>二、steamcmd安装</h3><p>首先连接到Linux系统后首先创建个steam用户</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">useradd -m steam</span><br></pre></td></tr></table></figure>
-
-<p>进入用户目录</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /home/steam</span><br></pre></td></tr></table></figure>
-
-<p>以上步骤各个Linux操作系统相同</p>
-<p>接下来我会分操作系统打印命令</p>
-<h4 id="CentOS安装："><a href="#CentOS安装：" class="headerlink" title="CentOS安装："></a>CentOS安装：</h4><h6 id="安装环境："><a href="#安装环境：" class="headerlink" title="安装环境："></a>安装环境：</h6><p>若你的操作系统不是64位，那只需要执行上面这条</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install glibc libstdc++</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install glibc.i686 libstdc++.i686</span><br></pre></td></tr></table></figure>
-
-<h6 id="CentOS安装screen管理工具"><a href="#CentOS安装screen管理工具" class="headerlink" title="CentOS安装screen管理工具"></a>CentOS安装screen管理工具</h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y screen</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="Ubuntu-Debain安装"><a href="#Ubuntu-Debain安装" class="headerlink" title="Ubuntu&#x2F;Debain安装:"></a>Ubuntu&#x2F;Debain安装:</h4><h6 id="环境安装"><a href="#环境安装" class="headerlink" title="环境安装"></a>环境安装</h6><p>注意：root用户不用加sudo</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install lib32gcc1</span><br></pre></td></tr></table></figure>
-
-<h6 id="Ubuntu-Debain安装screen管理工具"><a href="#Ubuntu-Debain安装screen管理工具" class="headerlink" title="Ubuntu&#x2F;Debain安装screen管理工具"></a>Ubuntu&#x2F;Debain安装screen管理工具</h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install screen</span><br></pre></td></tr></table></figure>
-
-
-
-<p>注意：以下操作相同</p>
-<p>切换用户：默认以root用户登录切换到steam用户</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">su - steam</span><br></pre></td></tr></table></figure>
-
-<p>为 SteamCMD 创建目录并切换至该目录。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> ~/Steam &amp;&amp; <span class="built_in">cd</span> ~/Steam</span><br></pre></td></tr></table></figure>
-
-<p>下载并解压缩适用于 Linux 的 SteamCMD。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -sqL <span class="string">&quot;https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz&quot;</span> | tar zxvf -</span><br></pre></td></tr></table></figure>
-
-<p>ls查看一下是不是有个steamcmd.sh文件，并运行</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ls</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./steamcmd.sh</span><br></pre></td></tr></table></figure>
-
-<p>吐槽一句:第一次加载可能有点慢，看运气，如果下载实在很慢的话可以ctrl＋c退出，然后将整个Steam文件夹干掉（删除）然后会到前面创建Steam文件那重来就好</p>
-<h3 id="三、登录steamcmd并安装CS起源"><a href="#三、登录steamcmd并安装CS起源" class="headerlink" title="三、登录steamcmd并安装CS起源"></a>三、登录steamcmd并安装CS起源</h3><p>如果出现Steam&gt;这个就证明你成功安装了，接下来在这个界面我们要登录，并安装cs起源</p>
-<p>注意：在Steam&gt;里面不小心输入错了也删不了的话，没关系，回车一下再重新输入就好</p>
-<h4 id="选择路径"><a href="#选择路径" class="headerlink" title="选择路径:"></a>选择路径:</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">force_install_dir ./cs_source/</span><br></pre></td></tr></table></figure>
-
-<h4 id="登录SteamCMD："><a href="#登录SteamCMD：" class="headerlink" title="登录SteamCMD："></a>登录SteamCMD：</h4><p>注意：要先选择路径后登录</p>
-<p>这里采用匿名方式登录,省事</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">login anonymous</span><br></pre></td></tr></table></figure>
-
-<h4 id="下载cs起源服务器："><a href="#下载cs起源服务器：" class="headerlink" title="下载cs起源服务器："></a>下载cs起源服务器：</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">app_update 232330 validate</span><br></pre></td></tr></table></figure>
-
-<p>然后你只需要等待，或者泡杯茶，或者先去打开steam准备测试</p>
-<p>这个下载速度客观，而且不会像cs1.6那样报错</p>
-<p>等他出现<code>Success! App &#39;232330&#39; fully installed.</code>就输入<code>quit</code></p>
-<h4 id="配置文件："><a href="#配置文件：" class="headerlink" title="配置文件："></a>配置文件：</h4><p>现在就已经完成cs起源安装了</p>
-<p>接下来需要稍稍配置一下就好了,将一下内容复制粘贴到一个文本文件内容，然后重命名为<code>server.cfg</code>上传到目录<code>/home/steam/Steam/cs_source/cstrike/cfg</code>中，当然这是我的目录，如果你前面有更改的话会不同，但核心就是将文件放入cstrike下面的cfg文件中</p>
-<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">hostname &quot;全CS区最靓的服务器&quot;                   //服务器的名称</span><br><span class="line">Rcon_password &quot;&quot;			// 远程控制密码, 没设即不需要密码</span><br><span class="line">sv_password &quot;&quot;					// 进入服务器所需的密码设定, 没设即不需要密码</span><br><span class="line">sv_region &quot;4&quot;					// 设定服务器的所在区域, 4 为亚洲</span><br><span class="line">sv_allowdownload &quot;1&quot;				// 允许下载档案 (如: 新地图)</span><br><span class="line">sv_allowupload &quot;1&quot;				// 允许上传档案</span><br><span class="line">sv_alltalk &quot;0&quot;					// 公麦 (0/1 - 关/开)</span><br><span class="line">sv_cheats &quot;0&quot;					//作弊功能</span><br><span class="line">tv_enable &quot;1&quot;					// 开启 Source TV (0/1 - 关/开)</span><br><span class="line">sv_downloadurl &quot;http://css.xxx.com/&quot;	//设置地图下载，域名需要绑定在 cstrike 目录上，否则将无法下载地图，可以把地图压缩城.b2z格式提高下载速度</span><br><span class="line">sv_gravity &quot;800&quot;				// 地心引力设定值, 预设 800 重力</span><br><span class="line">sv_voiceenable &quot;1&quot;				// 是否允许玩家使用 mic (0/1 - 关/开)</span><br><span class="line">sv_rcon_maxfailures &quot;2&quot;				//试图取得治理员权限失败凌驾几次，CDKEY即被BAN</span><br><span class="line">sv_maxrate &quot;0&quot;				//限制网络传输的资料最大值</span><br><span class="line">sv_minrate &quot;0&quot;				//限制网络传输的资料最小值</span><br><span class="line">sv_maxupdaterate &quot;66&quot;				//服务器发送至客户端的最大每秒更新次数</span><br><span class="line">sv_minupdaterate &quot;66&quot;				//服务器发送至客户端的最小每秒更新次数</span><br><span class="line">mp_playerid &quot;0&quot;					// 是否显示敌人及队友名字, 1:不显示敌人 2:皆不显示</span><br><span class="line">mp_flashlight &quot;1&quot;				// 是否允许手电筒 (0/1 - 关/开)</span><br><span class="line">mp_timelimit &quot;0&quot;				//多少时间后换地图</span><br><span class="line">mp_maxrounds &quot;0&quot;				//多少回合后换地图4</span><br><span class="line">mp_allowspectators &quot;1&quot;				// 是否允许观察者 (0/1 - 关/开) </span><br><span class="line">mp_footsteps &quot;1&quot;				// 是否允许脚步声 (0/1 - 关/开)</span><br><span class="line">mp_falldamage &quot;1&quot;				// 高处落下杀伤</span><br><span class="line">mp_autokick &quot;0&quot;					// 是否将闲置及TKer自动踢出服务器 (0/1 - 关/开)</span><br><span class="line">mp_startmoney &quot;16000&quot;				//开局金钱设置</span><br><span class="line">mp_winlimit &quot;0&quot;					//任意一队杀多少回合后换地图</span><br><span class="line">mp_fraglimit &quot;0&quot;　				// 某玩家获得多少 frag 后换地图 (0 无限制) </span><br><span class="line">mp_freezetime &quot;0&quot;				// 回合开始前的冻结时间 (单位: 秒, 0 为无冻结时间) </span><br><span class="line">mp_buytime &quot;0.25&quot;				//设置购买武器的时间（单位秒）</span><br><span class="line">mp_forcecamera &quot;0&quot;				// 玩家死后是否只能看到同队画面 (0/1 - 关/开) </span><br><span class="line">mp_fadetoblack &quot;0&quot;				// 玩家死后画面是否为黑幕 (0/1 - 关/开) </span><br><span class="line">mp_friendlyfire &quot;0&quot;				//设定会不会杀伤队友。1是会，0是关闭</span><br><span class="line">mp_autoteambalance &quot;1&quot;　　　　　		// 是否启动自动队伍平衡功能 (0/1 - 关/开) </span><br><span class="line">mp_limitteams &quot;1&quot;　　　　　　 　		// 队伍人数最大可相差几人 </span><br><span class="line">mp_roundtime &quot;3&quot;				// 回合时间 (单位: 分钟) </span><br><span class="line">log &quot;0&quot;						//设定是否启用日志 0 不启用 1启用</span><br><span class="line">mp_logdetail &quot;0&quot;				// 是否启用详细 log 功能 (0/1 - 关/开</span><br><span class="line">mp_tkpunish &quot;0&quot;					// 是否开启 TK 惩罚 (0/1 - 关/开) </span><br><span class="line">mp_c4timer &quot;35&quot;					//C4炸弹引爆时间</span><br><span class="line">sv_airaccelerate &quot;5&quot;				//空中停留时间 (默认 10)</span><br><span class="line">sv_enablebunnyhopping &quot;0&quot;			//是否开启连跳相关</span><br></pre></td></tr></table></figure>
-
-<h4 id="启动服务器"><a href="#启动服务器" class="headerlink" title="启动服务器"></a>启动服务器</h4><p>进入目录</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/home/steam/Steam/cs_source</span><br></pre></td></tr></table></figure>
-
-<p>创建一个启动脚本（如果报错显示没有vim可以用vi代替）</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim strat.sh</span><br></pre></td></tr></table></figure>
-
-<p>输入i进入插入模式并粘贴脚本</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Starting CS:Source Server&quot;</span></span><br><span class="line"><span class="built_in">sleep</span> 1</span><br><span class="line">screen -A -dm -S css-server ./srcds_run -console -game cstrike -tickrate 66 -pingboost 3  +sv_lan 0 -port 27015 +map de_inferno +maxplayers 10</span><br><span class="line">screen -x css-server</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>可以更改脚本内容，我这里是最大十个玩家，然后地图是小镇，你可以修改成自己想要比如de_dust_2</p>
-<p>启动后键盘<code>Ctrl+a+d</code>，这样我们就可以安心退出，程序会执行下去</p>
-<p>可以通过screen -ls 命令查看会话窗口</p>
-<p>也可以用<code>ps -u</code>查看进程，关闭的话用<code>kill PID</code></p>
-<h4 id="连接服务器："><a href="#连接服务器：" class="headerlink" title="连接服务器："></a>连接服务器：</h4><p>进入cs起源后<code>~</code>键打开控制台</p>
-<p>输入</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">connect 你的ip</span><br></pre></td></tr></table></figure>
-
-<p>改端口了的话要加端口号</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">connect 你的ip:端口号</span><br></pre></td></tr></table></figure>
-
-<h3 id="四、参考文档"><a href="#四、参考文档" class="headerlink" title="四、参考文档:"></a>四、参考文档:</h3><p>官方文档</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://developer.valvesoftware.com/wiki/SteamCMD:zh-cn</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1200,7 +1164,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-count">12</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
