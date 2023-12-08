@@ -657,7 +657,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/03/09/%E8%B0%83%E7%94%A8openAI-Image-models%E7%9A%84API/" class="post-title-link" itemprop="url">调用openAI API 实现AI画图</a>
+            <a href="/2023/03/09/%E8%B0%83%E7%94%A8openAI-Image-models%E7%9A%84API/" class="post-title-link" itemprop="url">调用openAI API(python) 实现AI画图</a>
         </h2>
 
         <div class="post-meta">
@@ -674,7 +674,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-07-09 22:22:16" itemprop="dateModified" datetime="2023-07-09T22:22:16+08:00">2023-07-09</time>
+                <time title="Modified: 2023-12-08 15:27:59" itemprop="dateModified" datetime="2023-12-08T15:27:59+08:00">2023-12-08</time>
               </span>
 
           
@@ -688,9 +688,11 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="调用openAI-Image-models的API"><a href="#调用openAI-Image-models的API" class="headerlink" title="调用openAI-Image models的API"></a>调用openAI-Image models的API</h1><p>调用openAI-Image models的API</p>
+          <h1 id="调用openAI-Image-models的API（Python实现版）"><a href="#调用openAI-Image-models的API（Python实现版）" class="headerlink" title="调用openAI-Image models的API（Python实现版）"></a>调用openAI-Image models的API（Python实现版）</h1><p>调用openAI-Image models的API</p>
 <p>博主这里承接上文调用chatGPT的API实现AI对话，接着继续用API实现AI画图</p>
 <p>依旧用Python代码实现</p>
+<p>2023&#x2F;12&#x2F;8</p>
+<p>今天想使用一下api 突然发现旧版本已经更新了、于是咱也更新一下</p>
 <h2 id="1、-准备环境"><a href="#1、-准备环境" class="headerlink" title="1、 准备环境"></a>1、 准备环境</h2><div>
 <ul>
     1、python基本环境 </ul>
@@ -700,24 +702,44 @@
     3、拥有openAI账号(chatGPT账号，没有可以注册一个)
     </ul>
 <ul>
-    4、具有代理上网能力(全局),或者挂在境外服务器上运行
-    </ul></div>
+    4、<s>具有代理上网能力(全局)</s>,|| 挂在境外服务器上运行 || 使用正向代理代理加上备注处代码即可 || 使用反向代理（^_^|思来想去还是不提供了）
 
 
-<h2 id="2、实践"><a href="#2、实践" class="headerlink" title="2、实践"></a>2、实践</h2><p>首先进入openAI_API的官网获取API_Key—&gt;<a target="_blank" rel="noopener" href="https://platform.openai.com/overview">openAI</a></p>
+<pre><code>&lt;/ul&gt;&lt;/div&gt;
+</code></pre>
+<h2 id="2、实践"><a href="#2、实践" class="headerlink" title="2、实践"></a>2、实践</h2><p><strong>该位置已经换了、但是目的是一样的瞄准API keys 这个关键字</strong>首先进入openAI_API的官网获取API_Key—&gt;<a target="_blank" rel="noopener" href="https://platform.openai.com/overview">openAI</a></p>
 <p>进入View API keys</p>
 <p><img src="/../image/person.png"></p>
 <p>点击创建Create new secret key</p>
 <p><img src="/../image/api_Key.png"></p>
 <p>并复制所创建的API_Key备用</p>
+<p>（可选）：将api 配置全局变量</p>
+<p>windows: 打开cmd </p>
+<figure class="highlight dos"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setx OPENAI_API_KEY &quot;your-api-key-here&quot;</span><br></pre></td></tr></table></figure>
+
+<p>macOS :终端 打开编辑器 nano 或者 <a target="_blank" rel="noopener" href="https://www.vim.org/">vim</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nano ~/.bash_profile 或者 vim ~/.bash_profile</span><br></pre></td></tr></table></figure>
+
+<p> 添加一行信息到末尾</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> OPENAI_API_KEY=<span class="string">&#x27;your-api-key-here&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>关闭编辑器 </p>
+<p>nano <code>按 Ctrl+O 写入更改，然后按 Ctrl+X 关闭编辑器</code> 或者 vim <code>:wq</code>命令</p>
 <p>博主这里从官网直接复制代码，并添加了存储本地功能:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> openai</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">image</span>(<span class="params">prompt</span>):</span><br><span class="line">    openai.api_key = <span class="string">&#x27;你自己的API_Key&#x27;</span></span><br><span class="line">    response = openai.Image.create(</span><br><span class="line">    prompt=prompt,</span><br><span class="line">    n=<span class="number">1</span>,</span><br><span class="line">    size=<span class="string">&quot;1024x1024&quot;</span></span><br><span class="line">    )</span><br><span class="line">    image_url = response[<span class="string">&#x27;data&#x27;</span>][<span class="number">0</span>][<span class="string">&#x27;url&#x27;</span>]</span><br><span class="line">    <span class="comment"># 存储图片</span></span><br><span class="line">    fileDown(image_url)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">fileDown</span>(<span class="params">url</span>):</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(<span class="string">&#x27;./image&#x27;</span>):</span><br><span class="line">        os.mkdir(<span class="string">&#x27;./image&#x27;</span>)</span><br><span class="line">    headers=&#123;</span><br><span class="line">            <span class="string">&quot;User-Agent&quot;</span>:<span class="string">&quot;Mozilla/5.0(Windows NT 10.0;Win64;x64) AppleWebKit / 537.36(KHTML, likeGecko) Chrome / 88.0.4324.150 Safari / 537.36&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">    res = requests.get(url=url,headers=headers).content</span><br><span class="line">    src_path = <span class="string">&#x27;./image/&#x27;</span> +url.split(<span class="string">&#x27;/&#x27;</span>)[-<span class="number">1</span>]+ <span class="string">&#x27;.jpg&#x27;</span></span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(src_path,<span class="string">&#x27;wb&#x27;</span>) <span class="keyword">as</span> fp:</span><br><span class="line">        fp.write(res)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    prompt = <span class="built_in">input</span>(<span class="string">&#x27;请输入描述信息：&#x27;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;请稍后...&#x27;</span>)</span><br><span class="line">    image(prompt=prompt)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;完成，请移步当前目录下image文件...&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 2023/12/8</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> openai <span class="keyword">import</span> OpenAI</span><br><span class="line"><span class="keyword">import</span> openai</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">image</span>(<span class="params">prompt</span>):</span><br><span class="line">    client = OpenAI()</span><br><span class="line">    <span class="comment"># 备注按需添加</span></span><br><span class="line">    response = client.images.generate(</span><br><span class="line">    model=<span class="string">&quot;dall-e-3&quot;</span>,</span><br><span class="line">    prompt=prompt,</span><br><span class="line">    size=<span class="string">&quot;1024x1024&quot;</span>,</span><br><span class="line">    quality=<span class="string">&quot;standard&quot;</span>,</span><br><span class="line">    n=<span class="number">1</span>,</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    image_url = response.data[<span class="number">0</span>].url</span><br><span class="line">        <span class="comment"># 存储图片</span></span><br><span class="line">    fileDown(image_url)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">fileDown</span>(<span class="params">url</span>):</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(<span class="string">&#x27;./image&#x27;</span>):</span><br><span class="line">        os.mkdir(<span class="string">&#x27;./image&#x27;</span>)</span><br><span class="line">    headers=&#123;</span><br><span class="line">            <span class="string">&quot;User-Agent&quot;</span>:<span class="string">&quot;Mozilla/5.0(Windows NT 10.0;Win64;x64) AppleWebKit / 537.36(KHTML, likeGecko) Chrome / 88.0.4324.150 Safari / 537.36&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">    res = requests.get(url=url,headers=headers).content</span><br><span class="line">    src_path = <span class="string">&#x27;./image/&#x27;</span> +url.split(<span class="string">&#x27;/&#x27;</span>)[-<span class="number">1</span>]+ <span class="string">&#x27;.jpg&#x27;</span></span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(src_path,<span class="string">&#x27;wb&#x27;</span>) <span class="keyword">as</span> fp:</span><br><span class="line">        fp.write(res)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    prompt = <span class="built_in">input</span>(<span class="string">&#x27;请输入描述信息：&#x27;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;请稍后...&#x27;</span>)</span><br><span class="line">    image(prompt=prompt)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;完成，请移步当前目录下image文件...&#x27;</span>)</span><br></pre></td></tr></table></figure>
 
 <h2 id="3、运行结果截图"><a href="#3、运行结果截图" class="headerlink" title="3、运行结果截图"></a>3、运行结果截图</h2><p><img src="/../image/rundone.png"></p>
+<p>旧模型</p>
 <p><img src="/../image/cat.jpg"></p>
-<p>效果如大家所见，就是难以形容，大家可以自己尝试一下！！！</p>
+<p>dall-e-3模型</p>
+<p><img src="/../image/newcat.jpg"></p>
 <p>大家对AI感兴趣的可以阅读官方文档—&gt;<a target="_blank" rel="noopener" href="https://platform.openai.com/docs/introduction">openAI_Doc</a></p>
-<p>值得注意的是使用API并不是免费的，每张1024*1024的图片花费 $0.020，但每个账户都有$18的额度</p>
+<p>值得注意的是使用API并不是免费的，每张1024*1024的图片花费 $0.020，但每个账户都有<del>$18</del>（$5）额度、现时好像是3个月</p>
+<p>建议不差钱的小伙伴琢磨充值一下用最新模型</p>
+<h2 id="4、备注"><a href="#4、备注" class="headerlink" title="4、备注"></a>4、备注</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 没配环境可以直接在代码里面加、代理也可以</span></span><br><span class="line">openai.api_key = <span class="string">&quot;yours api key&quot;</span></span><br><span class="line">openai.proxy = <span class="string">&#x27;http://127.0.0.1:10809&#x27;</span> <span class="comment"># 按自己实际地址和端口</span></span><br></pre></td></tr></table></figure>
+
+
+
 
       
     </div>
