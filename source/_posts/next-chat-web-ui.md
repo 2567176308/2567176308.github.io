@@ -6,7 +6,7 @@ tags: AI
 
 # 构建你自己的 GPT4 聊天窗口
 
-_已经存在[chatGPT](chat.openai.com),[Gemini](https://gemini.google.com/)等等很好的AI聊天对话框、为啥还需要自己构建一个对话框 ?_
+_已经存在[chatGPT](https://chat.openai.com),[Gemini](https://gemini.google.com/)等等很好的AI聊天对话框、为啥还需要自己构建一个对话框 ?_
 
 
 
