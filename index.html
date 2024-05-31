@@ -148,6 +148,87 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://q7df1.github.io/2024/05/31/Two-star-programming/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/android-chrome-192x192.png">
+      <meta itemprop="name" content="SH EN">
+      <meta itemprop="description" content="纪录学习分享生活">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Shen的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2024/05/31/Two-star-programming/" class="post-title-link" itemprop="url">Two star programming</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2024-05-31 22:41:34 / Modified: 23:14:10" itemprop="dateCreated datePublished" datetime="2024-05-31T22:41:34+08:00">2024-05-31</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="二级指针链表删除"><a href="#二级指针链表删除" class="headerlink" title="二级指针链表删除"></a>二级指针链表删除</h1><p>最近看到linux之父的一些视频切片，十分的有感悟、他说的一句特别有意思的话：</p>
+<p><em><strong>”我自己不是一个梦想家，只是一个工程师，很高兴有这么多的人在仰望天空，但我只是看着地面，想在我自己摔倒之前填上面前的坑洼。“</strong></em></p>
+<p>结合视频里面看到的两段代码，尽管我对c语言并不熟练、但是在好奇心以及十分在意代码简洁度和美丽的洁癖心理作用下，我尝试去理解了代码神奇之处。</p>
+<p>代码讲的是链表节点的删除操作，第一段代码是常规的链表节点删除，需要将目标节点的上一个节点指针指向目标节点的下一个指针，达到跳过该节点的目的，最后将内存释放即可。第二段则是让我有些眼花，二级指针一出来我直接蒙圈了、这指针的指针是用来干什么的。想了半天都没有答案。代码及其的简单，看上去和第一段代码没有任何关联，可他们做的是相同的事情，这一下子勾起了我的求知欲。</p>
+<p>因为第一段代码看似逻辑简单，但是他需要区别三种情况</p>
+<ul>
+<li>当删除节点是头结点时</li>
+<li>当删除节点是尾节点时</li>
+<li>当删除节点是中间节点时</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">node</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">node</span> * <span class="title">next</span>;</span></span><br><span class="line">    ....</span><br><span class="line">&#125; node;</span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="title function_">bool</span> <span class="params">(* remove_fn)</span><span class="params">(node <span class="type">const</span> * v)</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Remove all nodes from the supplied list for which the</span></span><br><span class="line"><span class="comment">// supplied remove function returns true.</span></span><br><span class="line"><span class="comment">// Returns the new head of the list.</span></span><br><span class="line">node * <span class="title function_">remove_if</span><span class="params">(node * head, remove_fn rm)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">for</span> (node * prev = <span class="literal">NULL</span>, * curr = head; curr != <span class="literal">NULL</span>; )</span><br><span class="line">    &#123;</span><br><span class="line">        node * <span class="type">const</span> next = curr-&gt;next;</span><br><span class="line">        <span class="keyword">if</span> (rm(curr))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (prev)</span><br><span class="line">                prev-&gt;next = next;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                head = next;</span><br><span class="line">            <span class="built_in">free</span>(curr);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            prev = curr;</span><br><span class="line">        curr = next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> head;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>由于需要区分这几种情况，导致代码变得冗杂、所以第一段代码显得稍长，但只用到了一级指针、理解起来稍微没有那么费力。</p>
+<p>但linus不同意、认为这样的代码比第二种更差，第二种代码明显是更加以思考的。</p>
+<p>我大致复刻了一下代码的样子：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">remove_node0</span><span class="params">(<span class="type">node_t</span> * pHead,<span class="type">bool</span> (*should_remove)(<span class="type">node_t</span>* pNode))</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">node_t</span> ** curr = &amp;pHead; *curr; <span class="comment">/*curr will move*/</span>) &#123;</span><br><span class="line">        <span class="type">node_t</span> * node = *curr;</span><br><span class="line">        <span class="keyword">if</span>(should_remove(node))</span><br><span class="line">        &#123;</span><br><span class="line">            *curr = node -&gt; next;</span><br><span class="line">            <span class="built_in">free</span>(node);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> curr = &amp;node -&gt; next;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>写这段代码很有意思，利用二级指针指向头结点去遍历指针节点，这样删除的方式我认为是有区别第一种方式的</p>
+<ul>
+<li>删除指针并不是将前面节点的next指向当前节点的下一个节点，也就是说不是改变前面节点的next指向的地址、说白了与前面节点没有任何关系了</li>
+<li>他真正实现删除节点是通过将下一个节点指针的地址拖到了当前指针的地址处（后面节点的地址覆盖当前节点的地址）这样的好处是不需要考虑前节点是否真的存在，哪怕是最后一个节点大不了就覆盖了一个NULL过来，也是合理的。</li>
+</ul>
+<p>用Linus的原话来讲___”纠正细节是令人自豪的事。也许这段代码并非庞大和重要，但我喜欢看那些注重代码细节的人写的代码，也就是清楚地了解如何才能编译出有效代码（而不是寄望于聪明的编译器来产生有效代码，即使是那些原始的汇编代码））。”___</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://q7df1.github.io/2024/03/10/next-chat-web-ui/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1003,116 +1084,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://q7df1.github.io/2023/03/06/%E7%94%B3%E8%AF%B7SSL%E8%AF%81%E4%B9%A6/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/android-chrome-192x192.png">
-      <meta itemprop="name" content="SH EN">
-      <meta itemprop="description" content="纪录学习分享生活">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Shen的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/03/06/%E7%94%B3%E8%AF%B7SSL%E8%AF%81%E4%B9%A6/" class="post-title-link" itemprop="url">申请SSL证书</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2023-03-06 00:18:31" itemprop="dateCreated datePublished" datetime="2023-03-06T00:18:31+08:00">2023-03-06</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-03-10 15:27:06" itemprop="dateModified" datetime="2024-03-10T15:27:06+08:00">2024-03-10</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="服务器申请SSL证书"><a href="#服务器申请SSL证书" class="headerlink" title="服务器申请SSL证书"></a>服务器申请SSL证书</h1><h2 id="什么是SSL证书"><a href="#什么是SSL证书" class="headerlink" title="什么是SSL证书?"></a>什么是SSL证书?</h2><p>chatGPT给出这样的答案：</p>
-<p><img src="/../image/ssl_GPT.png"></p>
-<p>对于普通人理解SSL证书可以这样：很简单，如果你的服务器拥有SSL证书，这样你部署的网站可以通过https(更安全)访问，否则只能通过http访问</p>
-<p><img src="/../image/SSL_noSafe.png"></p>
-<p><img src="/../image/SSL_Safe.png"></p>
-<p>事实上我们选择申请SSL证书目的是需要搭建VPS，搭建自己的面板时候需要SSL证书，那这里呢 博主就介绍一种<em>免费</em>申请SSL证书的方式:<strong>acme.sh</strong>脚本搭建</p>
-<h3 id="什么是acme-sh"><a href="#什么是acme-sh" class="headerlink" title="什么是acme.sh?"></a>什么是acme.sh?</h3><p>chatGPT给出这样的答案：</p>
-<p><img src="/../image/acme.png"></p>
-<h2 id="实际操作"><a href="#实际操作" class="headerlink" title="实际操作"></a>实际操作</h2><h3 id="基本环境："><a href="#基本环境：" class="headerlink" title="基本环境："></a>基本环境：</h3><ul>1、Linux操作系统(ubuntu/debain,centOS)</ul>
-
-<ul>2、域名</ul>
-
-<h3 id="实践："><a href="#实践：" class="headerlink" title="实践："></a>实践：</h3><ul>1、域名DNS记录/绑定指定vps(云服务器)ip</ul>
-
-<p>我这里使用cloudFlare绑定指定ip，（如果有需要的话）可以选择多绑定几个</p>
-<p><img src="/../image/DNS.png"></p>
-<p>值得注意的是：域名(domain)由两部分组成，顶级域名和二级域名</p>
-<p>例如 www. example.com，这里example. com是顶级域名，也就是你自己所购买的域名，www是二级域名，再比如我的demo . example . com，我这里的名称即是demo即是二级域名，下面要填写域名操作要把一级域名和二级域名全部加上（demo . example . com）</p>
-<ul>2、Linux环境更新</ul>
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">apt update -y          <span class="comment">#Debian/Ubuntu 命令</span></span><br><span class="line">apt install -y curl    <span class="comment">#Debian/Ubuntu 命令</span></span><br><span class="line">apt install -y socat    <span class="comment">#Debian/Ubuntu 命令</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yum update -y          <span class="comment">#CentOS 命令</span></span><br><span class="line">yum install -y curl    <span class="comment">#CentOS 命令</span></span><br><span class="line">yum install -y socat    <span class="comment">#CentOS 命令</span></span><br></pre></td></tr></table></figure>
-
-<ul>2、安装 Acme 脚本</ul>
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl https://get.acme.sh | sh</span><br></pre></td></tr></table></figure>
-
-<ul>3、注册Acme</ul>
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/.acme.sh/acme.sh --register-account -m xxxx@xxxx.com <span class="comment">#后面是你的个人邮箱</span></span><br></pre></td></tr></table></figure>
-
-<ul>4、更换服务器</ul>
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/.acme.sh/acme.sh --issue -d demo.example.com --dns dns_cf --server letsencrypt</span><br></pre></td></tr></table></figure>
-
-<ul>5、申请SSL</ul>
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/.acme.sh/acme.sh --issue -d demo.example.com --standalone -k ec-256</span><br></pre></td></tr></table></figure>
-
-<p>出现以下信息则说明已经申请成功！</p>
-<p><img src="/../image/SSLdone.png"></p>
-<p>前两行分别是证书公钥和密钥地址，要用到SSL证书直接复制其地址即可</p>
-<p>最后祝你好运！！！</p>
-<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><p><a target="_blank" rel="noopener" href="https://v2rayssr.com/ssl.html#http_%E7%9A%84%E6%96%B9%E5%BC%8F%E9%AA%8C%E8%AF%81%E7%94%B3%E8%AF%B7">波仔分享</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=-GNPv3-Q3Es">一瓶奶油</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1184,12 +1155,12 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-count">14</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">tags</span>
       </div>
   </nav>

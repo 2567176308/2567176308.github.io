@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"q7df1.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="二级指针链表删除最近看到linux之父的一些视频切片，十分的有感悟、他说的一句特别有意思的话： ”我自己不是一个梦想家，只是一个工程师，很高兴有这么多的人在仰望天空，但我只是看着地面，想在我自己摔倒之前填上面前的坑洼。“ 结合视频里面看到的两段代码，尽管我对c语言并不熟练、但是在好奇心以及十分在意代码简洁度和美丽的洁癖心理作用下，我尝试去理解了代码神奇之处。 代码讲的是链表节点的删除操作，第一段代">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Two star programming">
+<meta property="og:url" content="https://q7df1.github.io/2024/05/31/Two-star-programming/index.html">
+<meta property="og:site_name" content="Shen的博客">
+<meta property="og:description" content="二级指针链表删除最近看到linux之父的一些视频切片，十分的有感悟、他说的一句特别有意思的话： ”我自己不是一个梦想家，只是一个工程师，很高兴有这么多的人在仰望天空，但我只是看着地面，想在我自己摔倒之前填上面前的坑洼。“ 结合视频里面看到的两段代码，尽管我对c语言并不熟练、但是在好奇心以及十分在意代码简洁度和美丽的洁癖心理作用下，我尝试去理解了代码神奇之处。 代码讲的是链表节点的删除操作，第一段代">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-05-31T14:41:34.000Z">
+<meta property="article:modified_time" content="2024-05-31T15:14:10.390Z">
+<meta property="article:author" content="SH EN">
+<meta property="article:tag" content="c">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://q7df1.github.io/2024/05/31/Two-star-programming/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Two star programming | Shen的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Shen的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://q7df1.github.io/2024/05/31/Two-star-programming/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/android-chrome-192x192.png">
+      <meta itemprop="name" content="SH EN">
+      <meta itemprop="description" content="纪录学习分享生活">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Shen的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Two star programming
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2024-05-31 22:41:34 / Modified: 23:14:10" itemprop="dateCreated datePublished" datetime="2024-05-31T22:41:34+08:00">2024-05-31</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="二级指针链表删除"><a href="#二级指针链表删除" class="headerlink" title="二级指针链表删除"></a>二级指针链表删除</h1><p>最近看到linux之父的一些视频切片，十分的有感悟、他说的一句特别有意思的话：</p>
+<p><em><strong>”我自己不是一个梦想家，只是一个工程师，很高兴有这么多的人在仰望天空，但我只是看着地面，想在我自己摔倒之前填上面前的坑洼。“</strong></em></p>
+<p>结合视频里面看到的两段代码，尽管我对c语言并不熟练、但是在好奇心以及十分在意代码简洁度和美丽的洁癖心理作用下，我尝试去理解了代码神奇之处。</p>
+<p>代码讲的是链表节点的删除操作，第一段代码是常规的链表节点删除，需要将目标节点的上一个节点指针指向目标节点的下一个指针，达到跳过该节点的目的，最后将内存释放即可。第二段则是让我有些眼花，二级指针一出来我直接蒙圈了、这指针的指针是用来干什么的。想了半天都没有答案。代码及其的简单，看上去和第一段代码没有任何关联，可他们做的是相同的事情，这一下子勾起了我的求知欲。</p>
+<p>因为第一段代码看似逻辑简单，但是他需要区别三种情况</p>
+<ul>
+<li>当删除节点是头结点时</li>
+<li>当删除节点是尾节点时</li>
+<li>当删除节点是中间节点时</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">node</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">node</span> * <span class="title">next</span>;</span></span><br><span class="line">    ....</span><br><span class="line">&#125; node;</span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="title function_">bool</span> <span class="params">(* remove_fn)</span><span class="params">(node <span class="type">const</span> * v)</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Remove all nodes from the supplied list for which the</span></span><br><span class="line"><span class="comment">// supplied remove function returns true.</span></span><br><span class="line"><span class="comment">// Returns the new head of the list.</span></span><br><span class="line">node * <span class="title function_">remove_if</span><span class="params">(node * head, remove_fn rm)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">for</span> (node * prev = <span class="literal">NULL</span>, * curr = head; curr != <span class="literal">NULL</span>; )</span><br><span class="line">    &#123;</span><br><span class="line">        node * <span class="type">const</span> next = curr-&gt;next;</span><br><span class="line">        <span class="keyword">if</span> (rm(curr))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (prev)</span><br><span class="line">                prev-&gt;next = next;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                head = next;</span><br><span class="line">            <span class="built_in">free</span>(curr);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            prev = curr;</span><br><span class="line">        curr = next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> head;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>由于需要区分这几种情况，导致代码变得冗杂、所以第一段代码显得稍长，但只用到了一级指针、理解起来稍微没有那么费力。</p>
+<p>但linus不同意、认为这样的代码比第二种更差，第二种代码明显是更加以思考的。</p>
+<p>我大致复刻了一下代码的样子：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">remove_node0</span><span class="params">(<span class="type">node_t</span> * pHead,<span class="type">bool</span> (*should_remove)(<span class="type">node_t</span>* pNode))</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">node_t</span> ** curr = &amp;pHead; *curr; <span class="comment">/*curr will move*/</span>) &#123;</span><br><span class="line">        <span class="type">node_t</span> * node = *curr;</span><br><span class="line">        <span class="keyword">if</span>(should_remove(node))</span><br><span class="line">        &#123;</span><br><span class="line">            *curr = node -&gt; next;</span><br><span class="line">            <span class="built_in">free</span>(node);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> curr = &amp;node -&gt; next;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>写这段代码很有意思，利用二级指针指向头结点去遍历指针节点，这样删除的方式我认为是有区别第一种方式的</p>
+<ul>
+<li>删除指针并不是将前面节点的next指向当前节点的下一个节点，也就是说不是改变前面节点的next指向的地址、说白了与前面节点没有任何关系了</li>
+<li>他真正实现删除节点是通过将下一个节点指针的地址拖到了当前指针的地址处（后面节点的地址覆盖当前节点的地址）这样的好处是不需要考虑前节点是否真的存在，哪怕是最后一个节点大不了就覆盖了一个NULL过来，也是合理的。</li>
+</ul>
+<p>用Linus的原话来讲___”纠正细节是令人自豪的事。也许这段代码并非庞大和重要，但我喜欢看那些注重代码细节的人写的代码，也就是清楚地了解如何才能编译出有效代码（而不是寄望于聪明的编译器来产生有效代码，即使是那些原始的汇编代码））。”___</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/c/" rel="tag"># c</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2024/03/10/next-chat-web-ui/" rel="prev" title="next-chat-web-ui">
+      <i class="fa fa-chevron-left"></i> next-chat-web-ui
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E7%BA%A7%E6%8C%87%E9%92%88%E9%93%BE%E8%A1%A8%E5%88%A0%E9%99%A4"><span class="nav-number">1.</span> <span class="nav-text">二级指针链表删除</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="SH EN"
+      src="/images/android-chrome-192x192.png">
+  <p class="site-author-name" itemprop="name">SH EN</p>
+  <div class="site-description" itemprop="description">纪录学习分享生活</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/2567176308" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;2567176308" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/Q7DF1@protonmail.com" title="E-Mail → Q7DF1@protonmail.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">SH EN</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
