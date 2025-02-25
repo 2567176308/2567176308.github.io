@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"q7df1.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Linux 工作流总结​	由于已经工作一年了,由于进行Android系统的客制化任务,其编译环境需要再Ubuntu环境下进行,故期间不停的在使用指令操作,渐渐的对Linux工作流有了新的认识与看法.回想起第一次秋招面试时有位面试官问我linux指令相关问题,:如果我要看log最后面几行我该怎么看.当时由于实战经验不足,又没有对该方面的知识死记硬背过,最后拧拧巴巴的最后不知道说了一通什么狗屎. 标准">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux 工作流总结">
+<meta property="og:url" content="https://q7df1.github.io/2025/02/25/Linux-%E5%B7%A5%E4%BD%9C%E6%B5%81%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:site_name" content="Shen的博客">
+<meta property="og:description" content="Linux 工作流总结​	由于已经工作一年了,由于进行Android系统的客制化任务,其编译环境需要再Ubuntu环境下进行,故期间不停的在使用指令操作,渐渐的对Linux工作流有了新的认识与看法.回想起第一次秋招面试时有位面试官问我linux指令相关问题,:如果我要看log最后面几行我该怎么看.当时由于实战经验不足,又没有对该方面的知识死记硬背过,最后拧拧巴巴的最后不知道说了一通什么狗屎. 标准">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-02-25T05:18:31.000Z">
+<meta property="article:modified_time" content="2025-02-25T05:19:53.808Z">
+<meta property="article:author" content="SH EN">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://q7df1.github.io/2025/02/25/Linux-%E5%B7%A5%E4%BD%9C%E6%B5%81%E6%80%BB%E7%BB%93/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Linux 工作流总结 | Shen的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Shen的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://q7df1.github.io/2025/02/25/Linux-%E5%B7%A5%E4%BD%9C%E6%B5%81%E6%80%BB%E7%BB%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/android-chrome-192x192.png">
+      <meta itemprop="name" content="SH EN">
+      <meta itemprop="description" content="纪录学习分享生活">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Shen的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Linux 工作流总结
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-02-25 13:18:31 / Modified: 13:19:53" itemprop="dateCreated datePublished" datetime="2025-02-25T13:18:31+08:00">2025-02-25</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Linux-工作流总结"><a href="#Linux-工作流总结" class="headerlink" title="Linux 工作流总结"></a>Linux 工作流总结</h1><p>​	由于已经工作一年了,由于进行Android系统的客制化任务,其编译环境需要再Ubuntu环境下进行,故期间不停的在使用指令操作,渐渐的对Linux工作流有了新的认识与看法.回想起第一次秋招面试时有位面试官问我linux指令相关问题,:如果我要看log最后面几行我该怎么看.当时由于实战经验不足,又没有对该方面的知识死记硬背过,最后拧拧巴巴的最后不知道说了一通什么狗屎.</p>
+<h3 id="标准输入流与标准输出流"><a href="#标准输入流与标准输出流" class="headerlink" title="标准输入流与标准输出流"></a>标准输入流与标准输出流</h3><p>​	要是在大二期间我看到这几个字,我一定是一脸问号,回想以前学Java时也遇到过这几个关键字,为什么称之为关键字,因为当时并没有理解什么时输出流与输入流,更不明白何为标准,学完Java后有了新的认识,一种抽象概念,讲的是将数据或者其他东西输入到系统(内存)中,这一过程抽象为输入流,反之从内存输出到其他设备如磁盘\显示器等则为输出流.在这一过程中我以为这只是Java这一编程语言的抽象概念而已.直到我开始阅读Linux的书籍&lt;,发现有&gt; 2&gt; 这样的标准输出流存在,我开始怀疑我以前的体系(何来体系?)于是我开始接触Linux系统编程,通过系统API去感受所谓的输入流与输出流(虽然感觉并没有什么卵用)</p>
+<p>于是没有人教我便自己领悟了怎么去保存diff文件,看书很神奇的一点在于它并未教你如何处理该情况,它只是告诉了你所谓的原理,你就能在工程中实战出来.由于在工作中经常要处理代码冲突的情况,并且是在Shell框中,一切都不是那么的自动化,所有的流程需要手动操作,所以难免的觉得麻烦,最开始由于不熟悉git操作,我采取的操作是直接将修改回退,并拉取到最新.此时如果修改不保存的话需要重新修改,故我才去的方式是将diff保存起来,方式也特别简单,由于执行 git diff时,会将diff信息输出到屏幕,也就是默认输出到屏幕.而最简单的方式便是将diff信息输出到文件即可,故 git diff &gt; patch.diff .这样信息就不会输出到屏幕,而是被重定向输出到了patch.diff文件中.当将代码拉新后 git apply patch.diff 即可将刚保存的修改应用至代码中,简单粗暴.由于标准输出被重定向到了文件中故屏幕不再显示,此时也无法观察到diff信息,甚至不知道是否diff为空,如果不检查一下diff文件的话,将来apply时可能是竹篮打水一场空,白忙活一场,故可以使用升级方案: git diff | tee patch.diff,该方法的好处在于,不仅可以将diff保存到文件还让它在显示器上输出信息. 利用管道符号| 将输出重定向到 tee工具 ,该工具的作用在于不仅可以将标准输出流显示在屏幕还可以将其保存为文件.</p>
+<p>​	过滤信息,当我想要在一堆文件中过滤到想要的文件名时, 可以使用 tree -fi| grep xxx, 当然还可以用find(不熟悉)去找.</p>
+<p>​	</p>
+<h3 id="环境变量"><a href="#环境变量" class="headerlink" title="环境变量"></a>环境变量</h3><p>​	以前在学校学编程语言的时候,经常要做的第一件事情就是下载安装配置好该语言的环境变量,以前只知道根据教程一步一步走,并不知道为什么要这么操作,或者并不知道这样做会有什么用.</p>
+<p>以Java为例,当我们开始学习该语言时,最最基本的我们需要去编译该语言,需要运行程序,所以我们需要JDK支撑,也就是说jdk里面的程序可以帮我们完成编译与运行操作,具体来说就是javac与java程序,配置环境变量的目的就是为了让计算机能够找到这两个程序.让我们在任意路径下都能够直接使用该程序.就是这么简单,那为什么配置好环境变量后就可以随处运行了呢? 原因也很简单,因为配置环境变量的位置会在第一次进入会话时执行一遍,既然执行过配置的环境变量,那变量自然也被赋予上了初始值.当我们使用bash去执行程序时,如果当前目录不存在该程序bash会帮我们去环境变量里配置好的路径里去寻找是否有我们需要的程序.这样自然就可以找到并执行了,环境变量分为系统变量与用户变量,三言两语难以讲明白,在加载时优先系统变量后加载用户变量,故用户变量配置的信息可以覆盖系统变量,优先级更高,在bash寻找程序时时先寻找用户变量配置,找到了便不会再去系统变量中寻找,故又是用户变量优先级更高.</p>
+<p>​	环境变量配置在用户配置文件或者系统配置文件,在每一次会话开始时被执行,这样的操作在后续是无感的,用起来非常方便,于是通过这个方法还可以做一些其他事情比如:别名 Linux命令行操作,有时候需要执行步骤复杂,对于的指令也非常复杂,于是我们可以将一些复杂的指令起一个别名 例如 alias ll &#x3D;’ls -laF’,  起完别名后我们即可使用 ll 带她后面的操作,可是,alias的生效时间仅仅只有在当前会话中,如果退出登录后再登陆就再也没有用了,再想使用又要重新设置,于是为了解决这一办法,可以将该别名的设置写入用户配置文件中,这样每次退出会话时该别名虽然失效了,但进来时又会被重新设定,这样的无感知设置对于用户来说不就是永久生效吗? 别名是个好工具,在做调试Android部分源码时候由于代码比较多,嵌套文件夹很深,用cd一个个去进入很麻烦感觉像是在windows去点击寻找文件夹,设置了别名后像是在桌面加了一个快捷方式,直接点击即可进入.</p>
+<h3 id="Linux与C"><a href="#Linux与C" class="headerlink" title="Linux与C"></a>Linux与C</h3><p>​	c语言编译与java编译不一样的点在于,c编译[包括编译链接等一系列操作]最终生成就是二进制可执行文件,可以直接在系统上运行的,不需要其他环境,不像Java依赖于Java虚拟机才可运行.另外,在linux上编写程序遇到不知道使用的方法,可以通过man直接查阅使用方法.可惜我英文水平优先,阅读起来有点吃力.</p>
+<h3 id="编写脚本"><a href="#编写脚本" class="headerlink" title="编写脚本"></a>编写脚本</h3><p>​	在开发过程中会遇到大量的重复性工作，比如拉取代码时有时候由于代码钟存在未commit内容问题，有时由于网络波动导致代码拉取失败，前者可以通过进入到对应仓库进行checkout 再手动拉取，后者可以通过不断重试解决，而这些操作要么繁琐，要么需要不断监督，很浪费个人精力,于是可以通过编写脚本优化工作流程，shell的编写方式简单、直接调用c语言库就可以解决大部分问题。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Linux/" rel="tag"># Linux</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2024/03/10/next-chat-web-ui/" rel="prev" title="next-chat-web-ui">
+      <i class="fa fa-chevron-left"></i> next-chat-web-ui
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Linux-%E5%B7%A5%E4%BD%9C%E6%B5%81%E6%80%BB%E7%BB%93"><span class="nav-number">1.</span> <span class="nav-text">Linux 工作流总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%87%E5%87%86%E8%BE%93%E5%85%A5%E6%B5%81%E4%B8%8E%E6%A0%87%E5%87%86%E8%BE%93%E5%87%BA%E6%B5%81"><span class="nav-number">1.0.1.</span> <span class="nav-text">标准输入流与标准输出流</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="nav-number">1.0.2.</span> <span class="nav-text">环境变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Linux%E4%B8%8EC"><span class="nav-number">1.0.3.</span> <span class="nav-text">Linux与C</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E5%86%99%E8%84%9A%E6%9C%AC"><span class="nav-number">1.0.4.</span> <span class="nav-text">编写脚本</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="SH EN"
+      src="/images/android-chrome-192x192.png">
+  <p class="site-author-name" itemprop="name">SH EN</p>
+  <div class="site-description" itemprop="description">纪录学习分享生活</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/2567176308" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;2567176308" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/Q7DF1@protonmail.com" title="E-Mail → Q7DF1@protonmail.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">SH EN</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

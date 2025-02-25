@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"q7df1.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="模拟电商日志mapRuce计算准备环境ubuntu22.04虚拟机&#x2F;物理机  jdk安装以及环境配置  maven安装以及环境配置  hadoop安装以及环境配置  日志信息模拟生成利用javaIO模拟生成100w条购买记录 1234567891011121314&amp;20320230401170400&amp;Larry&amp;虚拟产品&amp;68.0&amp;3.0&amp;204.0">
+<meta property="og:type" content="article">
+<meta property="og:title" content="初次模拟大数据">
+<meta property="og:url" content="https://q7df1.github.io/2023/03/30/%E5%88%9D%E6%AC%A1%E6%A8%A1%E6%8B%9F%E5%A4%A7%E6%95%B0%E6%8D%AE/index.html">
+<meta property="og:site_name" content="Shen的博客">
+<meta property="og:description" content="模拟电商日志mapRuce计算准备环境ubuntu22.04虚拟机&#x2F;物理机  jdk安装以及环境配置  maven安装以及环境配置  hadoop安装以及环境配置  日志信息模拟生成利用javaIO模拟生成100w条购买记录 1234567891011121314&amp;20320230401170400&amp;Larry&amp;虚拟产品&amp;68.0&amp;3.0&amp;204.0">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://q7df1.github.io/image/project.png">
+<meta property="og:image" content="https://q7df1.github.io/image/dataAndOutput.png">
+<meta property="og:image" content="https://q7df1.github.io/image/display.png">
+<meta property="article:published_time" content="2023-03-29T17:00:42.000Z">
+<meta property="article:modified_time" content="2025-02-25T05:13:27.246Z">
+<meta property="article:author" content="SH EN">
+<meta property="article:tag" content="bigdata">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://q7df1.github.io/image/project.png">
+
+<link rel="canonical" href="https://q7df1.github.io/2023/03/30/%E5%88%9D%E6%AC%A1%E6%A8%A1%E6%8B%9F%E5%A4%A7%E6%95%B0%E6%8D%AE/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>初次模拟大数据 | Shen的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Shen的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://q7df1.github.io/2023/03/30/%E5%88%9D%E6%AC%A1%E6%A8%A1%E6%8B%9F%E5%A4%A7%E6%95%B0%E6%8D%AE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/android-chrome-192x192.png">
+      <meta itemprop="name" content="SH EN">
+      <meta itemprop="description" content="纪录学习分享生活">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Shen的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          初次模拟大数据
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-03-30 01:00:42" itemprop="dateCreated datePublished" datetime="2023-03-30T01:00:42+08:00">2023-03-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2025-02-25 13:13:27" itemprop="dateModified" datetime="2025-02-25T13:13:27+08:00">2025-02-25</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="模拟电商日志mapRuce计算"><a href="#模拟电商日志mapRuce计算" class="headerlink" title="模拟电商日志mapRuce计算"></a>模拟电商日志mapRuce计算</h1><h2 id="准备环境"><a href="#准备环境" class="headerlink" title="准备环境"></a>准备环境</h2><ul><li>ubuntu22.04虚拟机/物理机</li></ul>
+
+<ul><li>jdk安装以及环境配置</li></ul>
+
+<ul><li>maven安装以及环境配置</li></ul>
+
+<ul><li>hadoop安装以及环境配置</li></ul>
+
+<h2 id="日志信息模拟生成"><a href="#日志信息模拟生成" class="headerlink" title="日志信息模拟生成"></a>日志信息模拟生成</h2><p>利用javaIO模拟生成100w条购买记录</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&amp;20320230401170400&amp;Larry&amp;虚拟产品&amp;68.0&amp;3.0&amp;204.0&amp;北京</span></span><br><span class="line"><span class="string">&amp;66420230401170400&amp;吴九&amp;电脑&amp;56.0&amp;13.0&amp;728.0&amp;北京</span></span><br><span class="line"><span class="string">&amp;90620230401170400&amp;郑十&amp;牙刷&amp;32.0&amp;9.0&amp;288.0&amp;北京</span></span><br><span class="line"><span class="string">&amp;60020230401170400&amp;郑十&amp;毛巾&amp;78.0&amp;1.0&amp;78.0&amp;长沙</span></span><br><span class="line"><span class="string">&amp;23020230401170400&amp;吴九&amp;虚拟产品&amp;61.0&amp;17.0&amp;1037.0&amp;长沙</span></span><br><span class="line"><span class="string">&amp;70520230401170400&amp;张三&amp;鞋子&amp;70.0&amp;15.0&amp;1050.0&amp;上海</span></span><br><span class="line"><span class="string">&amp;44620230401170400&amp;王五&amp;牙刷&amp;11.0&amp;7.0&amp;77.0&amp;上海</span></span><br><span class="line"><span class="string">&amp;18320230401170400&amp;赵六&amp;篮球&amp;48.0&amp;3.0&amp;144.0&amp;上海</span></span><br><span class="line"><span class="string">&amp;61620230401170400&amp;周八&amp;牙刷&amp;30.0&amp;19.0&amp;570.0&amp;上海</span></span><br><span class="line"><span class="string">......</span></span><br><span class="line"><span class="string">&amp;80320230401170400&amp;李四&amp;水杯&amp;19.0&amp;9.0&amp;171.0&amp;北京</span></span><br><span class="line"><span class="string">&amp;48620230401170400&amp;周八&amp;牙刷&amp;97.0&amp;9.0&amp;873.0&amp;张家界</span></span><br><span class="line"><span class="string">&amp;43120230401170400&amp;张三&amp;篮球&amp;36.0&amp;6.0&amp;216.0&amp;佛山</span></span><br><span class="line"><span class="string">&amp;93720230401170400&amp;李四&amp;毛巾&amp;56.0&amp;19.0&amp;1064.0&amp;广州</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="构建maven项目"><a href="#构建maven项目" class="headerlink" title="构建maven项目"></a>构建maven项目</h2><p>项目结构：将hadoop&#x2F;etc&#x2F;hadoop目录下的core-site.xml,hdfs-site.xml,log4g.properties文件分别复制到resources目录下</p>
+<p><img src="/../image/project.png"></p>
+<p>修改pom.xml 配置文件(博主用的Hadoop2.10.1，jdk1.8 maven3.9)</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://maven.apache.org/POM/4.0.0&quot;</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.example<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mapReduceDemo<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">repositories</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">repository</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">id</span>&gt;</span>apache<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://maven.apache.org<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">repository</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">repositories</span>&gt;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.12<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.hadoop<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>hadoop-common<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.10.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.hadoop<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>hadoop-hdfs<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.10.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.hadoop<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>hadoop-mapreduce-client-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.10.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.hadoop<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>hadoop-mapreduce-client-jobclient<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.10.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>log4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>log4j<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2.17<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>计算每个城市对应的购买总金额，accountByCity.java代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.apache.hadoop.conf.Configuration;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.fs.FileSystem;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.fs.Path;</span><br><span class="line"><span class="comment">//import org.apache.hadoop.io.IntWritable;</span></span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.io.LongWritable;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.io.Text;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.Job;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.Mapper;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.Reducer;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.lib.input.FileInputFormat;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.util.StringTokenizer;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * &lt;城市，小计金额&gt;</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * &lt;城市，&#123;小计金额，小计金额...&#125;&gt;</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * &lt;城市，总计金额&gt;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">accountByCity</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">myMapper</span> <span class="keyword">extends</span> <span class="title class_">Mapper</span>&lt;Object,Text, Text, LongWritable&gt; &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="type">LongWritable</span> <span class="variable">account</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">LongWritable</span>();</span><br><span class="line">        <span class="keyword">private</span> <span class="type">Text</span> <span class="variable">city</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Text</span>();</span><br><span class="line">        <span class="keyword">private</span> <span class="type">long</span> startTime;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">setup</span><span class="params">(Context context)</span><span class="keyword">throws</span> IOException,InterruptedException&#123;</span><br><span class="line">            <span class="built_in">super</span>.setup(context);</span><br><span class="line">            startTime = System.currentTimeMillis();</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">map</span><span class="params">(Object key,Text value, Context context)</span></span><br><span class="line">                <span class="keyword">throws</span> IOException,InterruptedException&#123;</span><br><span class="line"><span class="comment">//            此处的value是文档中的第一行文本数据</span></span><br><span class="line">            <span class="type">String</span> <span class="variable">msg</span> <span class="operator">=</span> value.toString();</span><br><span class="line">            String[] list = msg.split(<span class="string">&quot;;&amp;&quot;</span>;);</span><br><span class="line">            city.set(list[<span class="number">7</span>]);</span><br><span class="line">            <span class="type">double</span> <span class="variable">myDouble</span> <span class="operator">=</span> Double.parseDouble(list[<span class="number">6</span>]);</span><br><span class="line">            <span class="type">long</span> <span class="variable">myLong</span> <span class="operator">=</span> (<span class="type">long</span>)myDouble;</span><br><span class="line">            account.set(myLong);</span><br><span class="line">            context.write(city,account);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">cleanup</span><span class="params">(Context context)</span> <span class="keyword">throws</span> IOException,InterruptedException &#123;</span><br><span class="line">            <span class="built_in">super</span>.cleanup(context);</span><br><span class="line">            <span class="type">long</span> <span class="variable">endTime</span> <span class="operator">=</span> System.currentTimeMillis();</span><br><span class="line">            <span class="type">long</span> <span class="variable">duration</span> <span class="operator">=</span> endTime - startTime;</span><br><span class="line">            System.out.println(<span class="string">&quot;;MapperTime : &quot;</span>;+ duration+ <span class="string">&quot;;ms&quot;</span>;);<span class="comment">//获取map计算总时间</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">myReduce</span> <span class="keyword">extends</span> <span class="title class_">Reducer</span>&lt;Text,LongWritable,Text,LongWritable&gt; &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="type">LongWritable</span> <span class="variable">result</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">LongWritable</span>();</span><br><span class="line">        <span class="keyword">private</span> <span class="type">long</span> startTime;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">setup</span><span class="params">(Context context)</span> <span class="keyword">throws</span> IOException,InterruptedException&#123;</span><br><span class="line">            <span class="built_in">super</span>.setup(context);</span><br><span class="line">            startTime = System.currentTimeMillis();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//        从这可以看出reduce处理的输入数据是&lt;key,value-list&gt;类型的键值对</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">reduce</span><span class="params">(Text key, Iterable&lt;LongWritable&gt; values, Context context)</span></span><br><span class="line">                <span class="keyword">throws</span> IOException,InterruptedException&#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">sum</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line"><span class="comment">//            reduce 函数就是对列表value中的数值进行相加</span></span><br><span class="line">            <span class="keyword">for</span>(LongWritable val : values) &#123;</span><br><span class="line">                sum += val.get();</span><br><span class="line">            &#125;</span><br><span class="line">            result.set(sum);</span><br><span class="line"><span class="comment">//            将结果写入context</span></span><br><span class="line">            context.write(key,result);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">cleanup</span><span class="params">(Context context)</span> <span class="keyword">throws</span> IOException,InterruptedException&#123;</span><br><span class="line">            <span class="built_in">super</span>.cleanup(context);</span><br><span class="line">            <span class="type">long</span> <span class="variable">endTime</span> <span class="operator">=</span> System.currentTimeMillis();</span><br><span class="line">            <span class="type">long</span> <span class="variable">duration</span> <span class="operator">=</span> endTime - startTime;</span><br><span class="line">            System.out.println(<span class="string">&quot;;ReducerTime :&quot;</span>;+duration+<span class="string">&quot;; ms&quot;</span>;);<span class="comment">//获取reduce计算总时间</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 1、accountByCity的main函数</span></span><br><span class="line"><span class="comment">     * 2、main函数主要创建一个job对象，然后对accountBycity任务所需要的map函数，reduce函数，输入文件路径，输出文件路径的信息</span></span><br><span class="line"><span class="comment">     * 进行配置</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception&#123;</span><br><span class="line">        <span class="type">Configuration</span> <span class="variable">conf</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Configuration</span>();</span><br><span class="line">        <span class="type">Job</span> <span class="variable">job</span> <span class="operator">=</span> Job.getInstance(conf,<span class="string">&quot;;;accountByCity&quot;</span>;);<span class="comment">//获取一个任务实例</span></span><br><span class="line">        job.setJarByClass(accountByCity.class);<span class="comment">//设置工作类</span></span><br><span class="line">        job.setMapperClass(myMapper.class);<span class="comment">//设置Mapper类</span></span><br><span class="line">        job.setReducerClass(myReduce.class);<span class="comment">//设置Reduce类</span></span><br><span class="line">        job.setOutputKeyClass(Text.class);<span class="comment">//设置输出键值对中的key的类型</span></span><br><span class="line">        job.setOutputValueClass(LongWritable.class);<span class="comment">//设置输出键值对中value的类型</span></span><br><span class="line">        FileInputFormat.addInputPath(job,<span class="keyword">new</span> <span class="title class_">Path</span>(args[<span class="number">0</span>]));<span class="comment">//设置输入文件的路径</span></span><br><span class="line">        FileOutputFormat.setOutputPath(job,<span class="keyword">new</span> <span class="title class_">Path</span>(args[<span class="number">1</span>]));</span><br><span class="line">        <span class="type">FileSystem</span> <span class="variable">fs</span> <span class="operator">=</span> FileSystem.get(conf);<span class="comment">//获取HDFS文件系统</span></span><br><span class="line">        fs.delete(<span class="keyword">new</span> <span class="title class_">Path</span>(args[<span class="number">1</span>]),<span class="literal">true</span>);<span class="comment">//删除输出路径下可能已经存在的文件</span></span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+
+<h2 id="运行项目"><a href="#运行项目" class="headerlink" title="运行项目"></a>运行项目</h2><h3 id="首先启动Hadoop服务"><a href="#首先启动Hadoop服务" class="headerlink" title="首先启动Hadoop服务"></a>首先启动Hadoop服务</h3><p><code>start-all.sh</code></p>
+<h3 id="上传日志文件到Hadoop的hdfs文件关系系统"><a href="#上传日志文件到Hadoop的hdfs文件关系系统" class="headerlink" title="上传日志文件到Hadoop的hdfs文件关系系统"></a>上传日志文件到Hadoop的hdfs文件关系系统</h3><p>关于Hadoop shell指令上传日志文件</p>
+<p>假设这是我的日志文件路径<code>/hadoop/test</code></p>
+<p><code>hadoop fs -mkdir /data</code>创建一个data目录</p>
+<p><code>hadoop fs -mkdir /output</code>创建一个output目录</p>
+<p><code>hadoop fs -put /hadoop/test /data</code>上传文件到data目录下</p>
+<h3 id="idea构建项目"><a href="#idea构建项目" class="headerlink" title="idea构建项目"></a>idea构建项目</h3><p><img src="/../image/dataAndOutput.png"></p>
+<h3 id="执行项目"><a href="#执行项目" class="headerlink" title="执行项目"></a>执行项目</h3><p>—success</p>
+<p>map 100% reduce 100% 说明运行成功    </p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">......</span></span><br><span class="line"><span class="number">23</span><span class="string">በ቞</span> <span class="attr">22:57:00 INFO mapred.LocalJobRunner: Finishing task:</span> <span class="string">attempt_local524911839_0001_r_000000_0</span></span><br><span class="line"><span class="number">23</span><span class="string">በ቞</span> <span class="attr">22:57:00 INFO mapred.LocalJobRunner:</span> <span class="string">reduce</span> <span class="string">task</span> <span class="string">executor</span> <span class="string">complete.</span></span><br><span class="line"><span class="number">23</span><span class="string">በ቞</span> <span class="attr">22:57:01 INFO mapreduce.Job:</span>  <span class="string">map</span> <span class="number">100</span><span class="string">%</span> <span class="string">reduce</span> <span class="number">100</span><span class="string">%</span></span><br><span class="line"><span class="number">23</span><span class="string">በ቞</span> <span class="attr">22:57:01 INFO mapreduce.Job:</span> <span class="string">Job</span> <span class="string">job_local524911839_0001</span> <span class="string">completed</span> <span class="string">successfully</span></span><br><span class="line"><span class="number">23</span><span class="string">በ቞</span> <span class="attr">22:57:01 INFO mapreduce.Job: Counters:</span> <span class="number">35</span></span><br><span class="line"><span class="string">......</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="查看生成数据"><a href="#查看生成数据" class="headerlink" title="查看生成数据"></a>查看生成数据</h3><p><img src="/../image/display.png"></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/bigdata/" rel="tag"># bigdata</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/03/09/%E9%9F%B3%E9%A2%91%E8%BD%AC%E6%96%87%E5%AD%97-openAI-Audio/" rel="prev" title="音频转文字-openAI-Audio">
+      <i class="fa fa-chevron-left"></i> 音频转文字-openAI-Audio
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/05/07/range-Pi-R1-Plus-LTS%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%89%93%E9%80%A0/" rel="next" title="range Pi R1 Plus LTS软路由打造">
+      range Pi R1 Plus LTS软路由打造 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A8%A1%E6%8B%9F%E7%94%B5%E5%95%86%E6%97%A5%E5%BF%97mapRuce%E8%AE%A1%E7%AE%97"><span class="nav-number">1.</span> <span class="nav-text">模拟电商日志mapRuce计算</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%86%E5%A4%87%E7%8E%AF%E5%A2%83"><span class="nav-number">1.1.</span> <span class="nav-text">准备环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%A5%E5%BF%97%E4%BF%A1%E6%81%AF%E6%A8%A1%E6%8B%9F%E7%94%9F%E6%88%90"><span class="nav-number">1.2.</span> <span class="nav-text">日志信息模拟生成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%84%E5%BB%BAmaven%E9%A1%B9%E7%9B%AE"><span class="nav-number">1.3.</span> <span class="nav-text">构建maven项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E9%A1%B9%E7%9B%AE"><span class="nav-number">1.4.</span> <span class="nav-text">运行项目</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A6%96%E5%85%88%E5%90%AF%E5%8A%A8Hadoop%E6%9C%8D%E5%8A%A1"><span class="nav-number">1.4.1.</span> <span class="nav-text">首先启动Hadoop服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8A%E4%BC%A0%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6%E5%88%B0Hadoop%E7%9A%84hdfs%E6%96%87%E4%BB%B6%E5%85%B3%E7%B3%BB%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.4.2.</span> <span class="nav-text">上传日志文件到Hadoop的hdfs文件关系系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#idea%E6%9E%84%E5%BB%BA%E9%A1%B9%E7%9B%AE"><span class="nav-number">1.4.3.</span> <span class="nav-text">idea构建项目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E9%A1%B9%E7%9B%AE"><span class="nav-number">1.4.4.</span> <span class="nav-text">执行项目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E7%94%9F%E6%88%90%E6%95%B0%E6%8D%AE"><span class="nav-number">1.4.5.</span> <span class="nav-text">查看生成数据</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="SH EN"
+      src="/images/android-chrome-192x192.png">
+  <p class="site-author-name" itemprop="name">SH EN</p>
+  <div class="site-description" itemprop="description">纪录学习分享生活</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/2567176308" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;2567176308" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/Q7DF1@protonmail.com" title="E-Mail → Q7DF1@protonmail.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">SH EN</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
